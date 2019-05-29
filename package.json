@@ -1,22 +1,46 @@
 {
-  "name": "klve.nl",
+  "name": "hello",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/jest": "24.0.13",
-    "@types/node": "12.0.3",
-    "@types/react": "16.8.19",
-    "@types/react-dom": "16.8.4",
+    "classnames": "^2.2.6",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-fast-compare": "^2.0.4",
+    "react-pose": "^4.0.8",
+    "react-router-dom": "^5.0.0",
+    "moment": "^2.24.0",
+    "qs": "^6.7.0",
+    "store2": "^2.7.1",
+    "styled-components": "^4.2.0",
+    "use-react-router": "^1.0.5"
+  },
+  "devDependencies": {
+    "@craco/craco": "^5.0.2",
+    "@types/classnames": "^2.2.7",
+    "@types/jest": "^24.0.13",
+    "@types/node": "12.0.0",
+    "@types/react": "16.8.17",
+    "@types/react-dom": "16.8.4",
+    "@types/react-helmet": "^5.0.8",
+    "@types/react-loadable": "^5.5.1",
+    "@types/react-router-dom": "^4.3.3",
+    "@types/styled-components": "^4.1.14",
+    "babel-plugin-macros": "^2.5.1",
+    "craco-plugin-react-hot-reload": "^0.0.3",
+    "http-proxy-middleware": "^0.19.1",
+    "jest": "^24.8.0",
     "react-scripts": "3.0.1",
+    "react-hot-loader": "^4.8.4",
+    "source-map-explorer": "^1.8.0",
+    "ts-jest": "^24.0.2",
     "typescript": "3.5.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -25,7 +49,8 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "ie10"
     ],
     "development": [
       "last 1 chrome version",
