@@ -33,8 +33,7 @@
     "react-scripts": "3.0.1",
     "react-hot-loader": "^4.8.4",
     "source-map-explorer": "^1.8.0",
-    "ts-jest": "^24.0.2",
-    "typescript": "3.5.1"
+    "ts-jest": "^24.0.2"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
