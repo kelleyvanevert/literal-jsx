@@ -1,8 +1,15 @@
 import React from "react";
 import { hot } from "react-hot-loader";
+import "~/assets/railroads.scss";
+import PlayWithJSON from "./sections/PlayWithJSON";
 
 function App() {
-  return <div>Hello Kelley</div>;
+  return (
+    <div>
+      <h1>Introducing Literal JSX</h1>
+      <PlayWithJSON />
+    </div>
+  );
 }
 
 const wrap =
