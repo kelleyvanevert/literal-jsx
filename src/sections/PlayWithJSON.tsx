@@ -5,7 +5,7 @@ import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
-import { parse } from "~/lib/json";
+import { parse } from "~/lib/parse";
 import rr from "railroad-diagrams";
 
 // @ts-ignore
