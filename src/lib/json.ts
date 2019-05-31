@@ -4,9 +4,9 @@ import {
   possibly,
   choice,
   many,
+  many1,
   anythingExcept,
   digit,
-  digits,
   anyOfString,
   char,
   mapTo,
@@ -27,6 +27,9 @@ const t = takeRight(whitespace);
 const tchar = (x: string) => t(char(x));
 const tstr = (x: string) => t(char(x));
 
+const flat = (x: any) => (x.join ? x.map(flat).join("") : x);
+const otherwise = <T>(x: T) => (y: null | T) => y || x;
+
 const squareBracketed = between(tchar("["))(tchar("]"));
 const curlyBracketed = between(tchar("{"))(tchar("}"));
 const commaSeparated = sepBy(tchar(","));
@@ -37,36 +40,29 @@ export const jsonStr: (source: string) => string = pipeParsers([
   mapTo((arr: ['"', string[], '"']) => arr[1].join(""))
 ]);
 
-export const jsonNum: (source: string) => number = pipeParsers([
-  sequenceOf([
-    t(possibly(char("-"))),
-    t(choice([char("0"), sequenceOf([anyOfString("123456789"), many(digit)])])),
-    t(possibly(sequenceOf([char("."), digits]))),
-    possibly(
-      sequenceOf([
-        t(choice([char("e"), char("E")])),
-        t(possibly(choice([char("-"), char("+")]))),
-        t(digits)
-      ])
-    )
-  ]),
-  mapTo(
-    ([s, n, d, e]: [
-      null | "-",
-      "0" | [string, string[]],
-      null | [".", string],
-      null | ["e" | "E", null | "-" | "+", string]
-    ]) => {
-      if (n === "0") return 0;
-      const sign = s ? -1 : 1;
-      const num =
-        sign * parseFloat(n[0] + n[1].join("") + (d ? "." + d[1] : ""));
-      return (
-        num * Math.pow(10, e ? (e[1] === "-" ? -1 : 1) * parseInt(e[2]) : 0)
-      );
-    }
-  )
-]);
+export const jsonNum: (source: string) => number = sequenceOf([
+  possibly(tchar("-")).map((x: null | "-") => x || ""),
+  t(
+    choice([
+      char("0"),
+      sequenceOf([anyOfString("123456789"), many(t(digit))]).map(
+        ([initial, rest]: [string, string[]]) => initial + rest.join("")
+      )
+    ])
+  ),
+  t(possibly(sequenceOf([char("."), many1(t(digit))]).map(flat))).map(
+    otherwise("")
+  ),
+  possibly(
+    sequenceOf([
+      t(choice([char("e"), char("E")])),
+      t(possibly(choice([char("-"), char("+")]))).map(otherwise("")),
+      many1(t(digit))
+    ])
+  ).map(otherwise(""))
+])
+  .map(flat)
+  .map(parseFloat);
 
 export const jsonVal: (source: string) => unknown = recursiveParser(() =>
   t(
