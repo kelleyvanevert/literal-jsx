@@ -96,6 +96,6 @@ export const jsonObj: (source: string) => object = curlyBracketed(
   pairs.reduce<object>((o, [k, v]) => ({ ...o, [k]: v }), {})
 );
 
-export const full = takeLeft(jsonVal)(endOfInput);
+export const full = takeLeft(jsonVal)(t(endOfInput));
 
 export const parse = arcParse(full);
