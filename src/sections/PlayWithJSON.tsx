@@ -1,12 +1,13 @@
 import "styled-components/macro";
 import React, { useRef, useEffect, useState } from "react";
 import createPersistedState from "use-persisted-state";
+import rr from "railroad-diagrams";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
+import Tabbed, { ITab } from "~/components/Tabbed";
 import { parse } from "~/lib/parse";
-import rr from "railroad-diagrams";
 
 // @ts-ignore
 window.rr = rr;
@@ -26,81 +27,160 @@ window.perf = function perf(f: (source: string) => any) {
 // @ts-ignore
 rr.Diagram.INTERNAL_ALIGNMENT = "left";
 
-const diagrams = {
-  object: rr.Diagram(
-    "{",
-    rr.ZeroOrMore(
-      rr.Sequence(rr.NonTerminal("string"), ":", rr.NonTerminal("value")),
-      ","
-    ),
-    "}"
-  ),
-  array: rr.Diagram("[", rr.ZeroOrMore(rr.NonTerminal("value"), ","), "]"),
-  value: rr.Diagram(
-    rr.Choice(
-      0,
-      rr.NonTerminal("string"),
-      rr.NonTerminal("number"),
-      rr.NonTerminal("object"),
-      rr.NonTerminal("array"),
-      "true",
-      "false",
-      "null"
-    )
-  ),
-  string: rr.Diagram(
-    '"',
-    rr.Optional(
-      rr.OneOrMore(
+const JSXL_DIAGRAM_TABS: ITab[] = [
+  {
+    title: "Element",
+    diagram: rr.Diagram(
+      rr.Sequence(
+        "<",
+        rr.NonTerminal("Identifier"),
+        rr.ZeroOrMore(rr.NonTerminal("Attribute")),
         rr.Choice(
           0,
-          rr.NonTerminal("almost any UNICODE character"),
+          "/>",
           rr.Sequence(
-            "\\",
-            rr.Choice(
-              0,
-              rr.Sequence('"', rr.Comment("quotation mark")),
-              rr.Sequence("\\", rr.Comment("reverse solidus")),
-              rr.Sequence("/", rr.Comment("solidus")),
-              rr.Sequence("b", rr.Comment("backspace")),
-              rr.Sequence("f", rr.Comment("formfeed")),
-              rr.Sequence("n", rr.Comment("newline")),
-              rr.Sequence("r", rr.Comment("carriage return")),
-              rr.Sequence("t", rr.Comment("horizontal tab")),
-              rr.Sequence("u", rr.NonTerminal("4 hexademical digits"))
-            )
+            ">",
+            rr.ZeroOrMore(rr.NonTerminal("Child")),
+            "</",
+            rr.NonTerminal("(same) Identifier"),
+            ">"
           )
         )
       )
-    ),
-    '"'
-  ),
-  number: rr.Diagram(
-    rr.Sequence(
-      rr.Choice(0, rr.Skip(), "-"),
-      rr.Choice(
-        0,
-        "0",
+    )
+  },
+  {
+    title: "Attribute",
+    diagram: rr.Diagram(
+      rr.NonTerminal("Identifier"),
+      rr.Optional(
         rr.Sequence(
-          rr.NonTerminal("digit 1-9"),
-          rr.OneOrMore(rr.Skip(), rr.NonTerminal("digit"))
-        )
-      ),
-      rr.Optional(rr.Sequence(".", rr.OneOrMore(rr.NonTerminal("digit")))),
-      rr.Choice(
-        0,
-        rr.Skip(),
-        rr.Sequence(
-          rr.Choice(0, "e", "E"),
-          rr.Choice(1, "-", rr.Skip(), "+"),
-          rr.OneOrMore(rr.NonTerminal("digit"))
+          "=",
+          rr.Choice(
+            0,
+            rr.NonTerminal("String"),
+            rr.Sequence("{", rr.NonTerminal("JSON value"), "}")
+          )
         )
       )
     )
-  )
-};
+  },
+  {
+    title: "Child",
+    diagram: rr.Diagram(
+      rr.Choice(
+        0,
+        rr.NonTerminal("plain text"),
+        rr.NonTerminal("Element"),
+        rr.NonTerminal("JSON value")
+      )
+    )
+  }
+].map(tab => ({
+  ...tab,
+  content: <div dangerouslySetInnerHTML={{ __html: tab.diagram }} />
+}));
 
-console.log(diagrams.string);
+const JSON_DIAGRAM_TABS: ITab[] = [
+  {
+    title: "JSON value",
+    diagram: rr.Diagram(
+      rr.Choice(
+        0,
+        rr.NonTerminal("Element"),
+        rr.NonTerminal("String"),
+        rr.NonTerminal("Number"),
+        rr.NonTerminal("Object"),
+        rr.NonTerminal("Array"),
+        "true",
+        "false",
+        "null"
+      )
+    )
+  },
+  {
+    title: "Object",
+    diagram: rr.Diagram(
+      "{",
+      rr.ZeroOrMore(
+        rr.Sequence(
+          rr.NonTerminal("String"),
+          ":",
+          rr.NonTerminal("JSON value")
+        ),
+        ","
+      ),
+      "}"
+    )
+  },
+  {
+    title: "Array",
+    diagram: rr.Diagram(
+      "[",
+      rr.ZeroOrMore(rr.NonTerminal("JSON value"), ","),
+      "]"
+    )
+  },
+  {
+    title: "String",
+    diagram: rr.Diagram(
+      '"',
+      rr.Optional(
+        rr.OneOrMore(
+          rr.Choice(
+            0,
+            rr.NonTerminal("almost any UNICODE character"),
+            rr.Sequence(
+              "\\",
+              rr.Choice(
+                0,
+                rr.Sequence('"', rr.Comment("quotation mark")),
+                rr.Sequence("\\", rr.Comment("reverse solidus")),
+                rr.Sequence("/", rr.Comment("solidus")),
+                rr.Sequence("b", rr.Comment("backspace")),
+                rr.Sequence("f", rr.Comment("formfeed")),
+                rr.Sequence("n", rr.Comment("newline")),
+                rr.Sequence("r", rr.Comment("carriage return")),
+                rr.Sequence("t", rr.Comment("horizontal tab")),
+                rr.Sequence("u", rr.NonTerminal("4 hexademical digits"))
+              )
+            )
+          )
+        )
+      ),
+      '"'
+    )
+  },
+  {
+    title: "Number",
+    diagram: rr.Diagram(
+      rr.Sequence(
+        rr.Choice(0, rr.Skip(), "-"),
+        rr.Choice(
+          0,
+          "0",
+          rr.Sequence(
+            rr.NonTerminal("digit 1-9"),
+            rr.OneOrMore(rr.Skip(), rr.NonTerminal("digit"))
+          )
+        ),
+        rr.Optional(rr.Sequence(".", rr.OneOrMore(rr.NonTerminal("digit")))),
+        rr.Choice(
+          0,
+          rr.Skip(),
+          rr.Sequence(
+            rr.Choice(0, "e", "E"),
+            rr.Choice(1, "-", rr.Skip(), "+"),
+            rr.OneOrMore(rr.NonTerminal("digit"))
+          )
+        )
+      )
+    )
+  }
+].map(tab => ({
+  ...tab,
+  content: <div dangerouslySetInnerHTML={{ __html: tab.diagram }} />
+}));
 
 const CM_OPTS = {
   mode: "plain",
@@ -136,6 +216,8 @@ export default function PlayWithJSON() {
 
   return (
     <div>
+      <Tabbed tabs={JSXL_DIAGRAM_TABS} />
+      <Tabbed tabs={JSON_DIAGRAM_TABS} />
       <div
         css={`
           min-height: 20rem;
@@ -165,16 +247,6 @@ export default function PlayWithJSON() {
         </div>
         <pre>{JSON.stringify(parsedJson, null, 2)}</pre>
       </div>
-      <table>
-        <tbody>
-          {Object.entries(diagrams).map(([key, diagram]) => (
-            <tr key={key}>
-              <td>{key}</td>
-              <td dangerouslySetInnerHTML={{ __html: diagram }} />
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
