@@ -15,32 +15,38 @@ import {
   pipeParsers,
   endOfInput,
   takeLeft,
+  takeRight,
+  whitespace,
   recursiveParser,
   parse as arcParse
 } from "arcsecond";
 
 // TODO: whitespace
 
-const squareBracketed = between(char("["))(char("]"));
-const curlyBracketed = between(char("{"))(char("}"));
-const commaSeparated = sepBy(char(","));
+const t = takeRight(whitespace);
+const tchar = (x: string) => t(char(x));
+const tstr = (x: string) => t(char(x));
+
+const squareBracketed = between(tchar("["))(tchar("]"));
+const curlyBracketed = between(tchar("{"))(tchar("}"));
+const commaSeparated = sepBy(tchar(","));
 
 // TODO actually follow the spec
 export const jsonStr: (source: string) => string = pipeParsers([
-  sequenceOf([char('"'), many(anythingExcept(char('"'))), char('"')]),
+  sequenceOf([tchar('"'), many(anythingExcept(char('"'))), char('"')]),
   mapTo((arr: ['"', string[], '"']) => arr[1].join(""))
 ]);
 
 export const jsonNum: (source: string) => number = pipeParsers([
   sequenceOf([
-    possibly(char("-")),
-    choice([char("0"), sequenceOf([anyOfString("123456789"), many(digit)])]),
-    possibly(sequenceOf([char("."), digits])),
+    t(possibly(char("-"))),
+    t(choice([char("0"), sequenceOf([anyOfString("123456789"), many(digit)])])),
+    t(possibly(sequenceOf([char("."), digits]))),
     possibly(
       sequenceOf([
-        choice([char("e"), char("E")]),
-        possibly(choice([char("-"), char("+")])),
-        digits
+        t(choice([char("e"), char("E")])),
+        t(possibly(choice([char("-"), char("+")]))),
+        t(digits)
       ])
     )
   ]),
@@ -63,15 +69,17 @@ export const jsonNum: (source: string) => number = pipeParsers([
 ]);
 
 export const jsonVal: (source: string) => unknown = recursiveParser(() =>
-  choice([
-    jsonStr,
-    jsonNum,
-    jsonArr,
-    jsonObj,
-    str("true").map(() => true),
-    str("false").map(() => false),
-    str("null").map(() => null)
-  ])
+  t(
+    choice([
+      jsonStr,
+      jsonNum,
+      jsonArr,
+      jsonObj,
+      str("true").map(() => true),
+      str("false").map(() => false),
+      str("null").map(() => null)
+    ])
+  )
 );
 
 export const jsonArr: (source: string) => unknown[] = squareBracketed(
@@ -79,7 +87,7 @@ export const jsonArr: (source: string) => unknown[] = squareBracketed(
 );
 
 export const jsonKeyValPair: (source: string) => [string, unknown] = sequenceOf(
-  [jsonStr, char(":"), jsonVal]
+  [jsonStr, tchar(":"), jsonVal]
 ).map(([k, _, v]: [string, string, unknown]) => [k, v]);
 
 export const jsonObj: (source: string) => object = curlyBracketed(
