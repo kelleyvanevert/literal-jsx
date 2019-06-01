@@ -14,7 +14,6 @@ import {
   sepBy,
   between,
   letter,
-  regex,
   pipeParsers,
   endOfInput,
   takeLeft,

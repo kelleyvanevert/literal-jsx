@@ -1,10 +1,12 @@
 declare module "railroad-diagrams" {
   export const Skip: () => FakeSVG;
   export const Start: (...items: any[]) => FakeSVG;
+  export const Stack: (...items: any[]) => FakeSVG;
   export const End: (...items: any[]) => FakeSVG;
   export const Comment: (...items: any[]) => FakeSVG;
   export const Sequence: (...items: any[]) => FakeSVG;
   export const Diagram: (...items: any[]) => FakeSVG;
+  export const ComplexDiagram: (...items: any[]) => FakeSVG;
   export const Choice: (...items: any[]) => FakeSVG;
   export const NonTerminal: (...items: any[]) => FakeSVG;
   export const OneOrMore: (...items: any[]) => FakeSVG;

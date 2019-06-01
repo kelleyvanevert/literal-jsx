@@ -1,48 +1,30 @@
 import "styled-components/macro";
-import React, { useRef, useEffect, useState } from "react";
-import createPersistedState from "use-persisted-state";
+import React from "react";
 import rr from "railroad-diagrams";
-import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
 import Tabbed, { ITab } from "~/components/Tabbed";
-import { parse } from "~/lib/parse";
-
-// @ts-ignore
-window.rr = rr;
-
-// @ts-ignore
-window.p = parse;
-
-// @ts-ignore
-window.perf = function perf(f: (source: string) => any) {
-  let t0 = performance.now();
-  for (let i = 0; i < 10000; i++) {
-    f('[23,-5,true,{"h":{"h":2},"age":{}}]');
-  }
-  return performance.now() - t0;
-};
 
 // @ts-ignore
 rr.Diagram.INTERNAL_ALIGNMENT = "left";
 
-const JSXL_DIAGRAM_TABS: ITab[] = [
+const JSXL_DIAGRAM_TABS: Array<ITab & { diagram: any }> = [
   {
     title: "Element",
-    diagram: rr.Diagram(
+    diagram: rr.ComplexDiagram(
       rr.Sequence(
         "<",
-        rr.NonTerminal("Identifier"),
+        rr.NonTerminal("Name"),
         rr.ZeroOrMore(rr.NonTerminal("Attribute")),
         rr.Choice(
-          0,
+          1,
           "/>",
           rr.Sequence(
             ">",
             rr.ZeroOrMore(rr.NonTerminal("Child")),
             "</",
-            rr.NonTerminal("(same) Identifier"),
+            rr.NonTerminal("Name*"),
             ">"
           )
         )
@@ -50,16 +32,27 @@ const JSXL_DIAGRAM_TABS: ITab[] = [
     )
   },
   {
-    title: "Attribute",
-    diagram: rr.Diagram(
+    title: "Name",
+    diagram: rr.ComplexDiagram(
       rr.NonTerminal("Identifier"),
+      rr.Choice(
+        0,
+        rr.ZeroOrMore(rr.Sequence(".", rr.NonTerminal("Identifier"))),
+        rr.Sequence(":", rr.NonTerminal("Identifier"))
+      )
+    )
+  },
+  {
+    title: "Attribute",
+    diagram: rr.ComplexDiagram(
+      rr.NonTerminal("Name"),
       rr.Optional(
         rr.Sequence(
           "=",
           rr.Choice(
             0,
             rr.NonTerminal("String"),
-            rr.Sequence("{", rr.NonTerminal("JSON value"), "}")
+            rr.Sequence("{", rr.NonTerminal("Value"), "}")
           )
         )
       )
@@ -67,12 +60,12 @@ const JSXL_DIAGRAM_TABS: ITab[] = [
   },
   {
     title: "Child",
-    diagram: rr.Diagram(
+    diagram: rr.ComplexDiagram(
       rr.Choice(
         0,
         rr.NonTerminal("plain text"),
         rr.NonTerminal("Element"),
-        rr.NonTerminal("JSON value")
+        rr.NonTerminal("Value")
       )
     )
   }
@@ -81,10 +74,26 @@ const JSXL_DIAGRAM_TABS: ITab[] = [
   content: <div dangerouslySetInnerHTML={{ __html: tab.diagram }} />
 }));
 
+JSXL_DIAGRAM_TABS[0].content = (
+  <div>
+    <div>{JSXL_DIAGRAM_TABS[0].content}</div>
+    <p>*must match the one on in the opening tag</p>
+  </div>
+);
+
+JSXL_DIAGRAM_TABS[1].content = (
+  <div>
+    <div>{JSXL_DIAGRAM_TABS[1].content}</div>
+    <p>
+      <em>Identifier</em> is any valid variable name in JavaScript
+    </p>
+  </div>
+);
+
 const JSON_DIAGRAM_TABS: ITab[] = [
   {
-    title: "JSON value",
-    diagram: rr.Diagram(
+    title: "Value",
+    diagram: rr.ComplexDiagram(
       rr.Choice(
         0,
         rr.NonTerminal("Element"),
@@ -100,14 +109,10 @@ const JSON_DIAGRAM_TABS: ITab[] = [
   },
   {
     title: "Object",
-    diagram: rr.Diagram(
+    diagram: rr.ComplexDiagram(
       "{",
       rr.ZeroOrMore(
-        rr.Sequence(
-          rr.NonTerminal("String"),
-          ":",
-          rr.NonTerminal("JSON value")
-        ),
+        rr.Sequence(rr.NonTerminal("String"), ":", rr.NonTerminal("Value")),
         ","
       ),
       "}"
@@ -115,9 +120,9 @@ const JSON_DIAGRAM_TABS: ITab[] = [
   },
   {
     title: "Array",
-    diagram: rr.Diagram(
+    diagram: rr.ComplexDiagram(
       "[",
-      rr.ZeroOrMore(rr.NonTerminal("JSON value"), ","),
+      rr.ZeroOrMore(rr.NonTerminal("Value"), ","),
       "]"
     )
   },
@@ -182,71 +187,18 @@ const JSON_DIAGRAM_TABS: ITab[] = [
   content: <div dangerouslySetInnerHTML={{ __html: tab.diagram }} />
 }));
 
-const CM_OPTS = {
-  mode: "plain",
-  lineNumbers: true,
-  smartIndent: true,
-  tabSize: 2,
-  indentWithTabs: false
-};
-
-const usePersistedJson = createPersistedState("json");
-
-const INITIAL_JSON = `{
-  "name": "Kelley",
-  "age": 27
-}`;
-
-export default function PlayWithJSON() {
-  const [json, setJson] = usePersistedJson<string>(INITIAL_JSON);
-  const [parsedJson, setParsedJson] = useState<any>(null);
-  const editJson = useRef<{
-    editor?: CodeMirror.Editor;
-    sel: CodeMirror.TextMarker[];
-  }>({ sel: [] });
-
-  useEffect(() => {
-    try {
-      setParsedJson(parse(json));
-    } catch (e) {
-      setParsedJson(e);
-      console.log(e);
-    }
-  }, [json]);
-
+export default function GrammarRailroads() {
   return (
     <div>
+      <h2>Specification</h2>
+      <p>
+        Literal JSX subsets JSX in the same spirit as JSON subsets JavaScript.
+        This means some "additional" JSX syntax has been omitted intentionally.
+        For example, JSX elements cannot be assigned unquoted to attributes of
+        other elements, and strings are always double-quoted, just like in JSON.
+      </p>
       <Tabbed tabs={JSXL_DIAGRAM_TABS} />
       <Tabbed tabs={JSON_DIAGRAM_TABS} />
-      <div
-        css={`
-          min-height: 20rem;
-          display: flex;
-          flex-direction: row;
-          align-items: stretch;
-        `}
-      >
-        <div
-          css={`
-            width: 40%;
-            border-right: 1px solid black;
-
-            .react-codemirror2,
-            .CodeMirror {
-              height: 100%;
-            }
-          `}
-        >
-          <CodeMirror
-            value={json}
-            options={CM_OPTS}
-            onBeforeChange={(editor, data, value) => {
-              setJson(value);
-            }}
-          />
-        </div>
-        <pre>{JSON.stringify(parsedJson, null, 2)}</pre>
-      </div>
     </div>
   );
 }

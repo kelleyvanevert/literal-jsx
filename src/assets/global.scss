@@ -1,5 +1,15 @@
+html,
+body {
+  font-family: serif;
+  font-size: 18px;
+}
+
 body {
   margin: 0;
   padding: 0;
   background: #f4f2ef;
+}
+
+.lead {
+  font-size: 120%;
 }
