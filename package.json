@@ -42,6 +42,7 @@
     "@types/use-persisted-state": "^0.3.0",
     "babel-plugin-macros": "^2.5.1",
     "craco-plugin-react-hot-reload": "^0.0.3",
+    "gh-pages": "^2.0.1",
     "http-proxy-middleware": "^0.19.1",
     "jest": "^24.8.0",
     "react-hot-loader": "^4.8.4",
@@ -53,7 +54,9 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test"
+    "test": "craco test",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
