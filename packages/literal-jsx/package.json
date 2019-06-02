@@ -1,6 +1,7 @@
 {
   "name": "literal-jsx",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "private": false,
   "description": "An example implementation of a Literal JSX parser (see https://literal-jsx.org/)",
   "main": "./lib/index.js",
   "author": "Kelley van Evert <hello@klve.nl>",

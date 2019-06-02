@@ -1,5 +1,5 @@
 {
-  "name": "literal-jsx",
+  "name": "literal-jsx-packages",
   "private": true,
   "workspaces": [
     "packages/*"
