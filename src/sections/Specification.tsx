@@ -13,22 +13,32 @@ const JSXL_DIAGRAM_TABS: Array<ITab & { diagram: any }> = [
   {
     title: "Element",
     diagram: rr.ComplexDiagram(
-      rr.Sequence(
-        "<",
-        rr.NonTerminal("Name"),
-        rr.ZeroOrMore(rr.NonTerminal("Attribute")),
-        rr.Choice(
-          1,
-          "/>",
-          rr.Sequence(
-            ">",
-            rr.ZeroOrMore(rr.NonTerminal("Child")),
-            "</",
-            rr.NonTerminal("Name*"),
-            ">"
-          )
+      "<",
+      rr.NonTerminal("Name"),
+      rr.ZeroOrMore(rr.NonTerminal("Attribute")),
+      rr.Choice(
+        1,
+        rr.Sequence("/", ">"),
+        rr.Sequence(
+          ">",
+          rr.ZeroOrMore(rr.NonTerminal("Child")),
+          "<",
+          "/",
+          rr.NonTerminal("Name*"),
+          ">"
         )
       )
+    )
+  },
+  {
+    title: "Fragment",
+    diagram: rr.ComplexDiagram(
+      "<",
+      ">",
+      rr.ZeroOrMore(rr.NonTerminal("Child")),
+      "<",
+      "/",
+      ">"
     )
   },
   {
@@ -45,7 +55,8 @@ const JSXL_DIAGRAM_TABS: Array<ITab & { diagram: any }> = [
   {
     title: "Attribute",
     diagram: rr.ComplexDiagram(
-      rr.NonTerminal("Name"),
+      rr.NonTerminal("Identifier"),
+      rr.Choice(0, rr.Skip(), rr.Sequence(":", rr.NonTerminal("Identifier"))),
       rr.Optional(
         rr.Sequence(
           "=",
@@ -65,7 +76,7 @@ const JSXL_DIAGRAM_TABS: Array<ITab & { diagram: any }> = [
         0,
         rr.NonTerminal("plain text"),
         rr.NonTerminal("Element"),
-        rr.NonTerminal("Value")
+        rr.Sequence("{", rr.NonTerminal("Value"), "}")
       )
     )
   }
@@ -81,9 +92,9 @@ JSXL_DIAGRAM_TABS[0].content = (
   </div>
 );
 
-JSXL_DIAGRAM_TABS[1].content = (
+JSXL_DIAGRAM_TABS[2].content = (
   <div>
-    <div>{JSXL_DIAGRAM_TABS[1].content}</div>
+    <div>{JSXL_DIAGRAM_TABS[2].content}</div>
     <p>
       <em>Identifier</em> is any valid variable name in JavaScript
     </p>
@@ -187,9 +198,9 @@ const JSON_DIAGRAM_TABS: ITab[] = [
   content: <div dangerouslySetInnerHTML={{ __html: tab.diagram }} />
 }));
 
-export default function GrammarRailroads() {
+export default function Specification() {
   return (
-    <div>
+    <section>
       <h2>Specification</h2>
       <p>
         Literal JSX subsets JSX in the same spirit as JSON subsets JavaScript.
@@ -199,6 +210,6 @@ export default function GrammarRailroads() {
       </p>
       <Tabbed tabs={JSXL_DIAGRAM_TABS} />
       <Tabbed tabs={JSON_DIAGRAM_TABS} />
-    </div>
+    </section>
   );
 }

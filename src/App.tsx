@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import cx from "classnames";
 import { hot } from "react-hot-loader";
 import "~/assets/railroads.scss";
-import GrammarRailroads from "./sections/GrammarRailroads";
+import Specification from "./sections/Specification";
+import Examples from "./sections/Examples";
+import Implementation from "./sections/Implementation";
 // import styles from "./App.module.scss";
 import logo from "~/assets/logo.svg";
 
@@ -127,6 +129,7 @@ function App() {
               max-width: 56rem;
               margin: 0 auto;
               padding: 1.4rem;
+              margin-bottom: 20rem;
             `}
           >
             <div
@@ -165,7 +168,7 @@ function App() {
                   `}
                 >
                   Let JSX embrace its potential as a markup format for
-                  transferring data- and component-rich content structures!
+                  transferring data-rich content structures!
                 </p>
               </div>
             </div>
@@ -190,7 +193,9 @@ function App() {
               <em>straightforward and intuitive standard</em> instead of an
               implementation.
             </p>
-            <GrammarRailroads />
+            <Specification />
+            <Examples />
+            <Implementation />
           </div>
         </div>
       </main>
