@@ -5,20 +5,9 @@ import { Controlled as CodeMirror } from "react-codemirror2";
 import "codemirror/mode/jsx/jsx";
 import "codemirror/lib/codemirror.css";
 import "~/assets/codemirror-theme.scss";
-import LJSX, {
-  makeParser,
-  JSONNumber,
-  JSONString,
-  JSONArray,
-  JSONObject,
-  JSONValue,
-  JSIdentifier,
-  JSXElement,
-  JSXName,
-  JSXAttribute,
-  JSXChild
-  // @ts-ignore
-} from "literal-jsx/lib/LJSX";
+// @ts-ignore
+import { ObjectInspector, chromeLight } from "react-inspector";
+import LJSX from "literal-jsx";
 
 // @ts-ignore
 window.LJSX = LJSX;
@@ -32,27 +21,21 @@ const CM_OPTS = {
   indentWithTabs: false
 };
 
-const parsers = {
-  JSONString,
-  JSONNumber,
-  JSONArray: JSONArray(),
-  JSONObject: JSONObject(),
-  JSONValue: JSONValue(),
-  JSIdentifier,
-  JSXName,
-  JSXElement: JSXElement(),
-  // "JSX - Fragment": Fragment(),
-  JSXAttribute: JSXAttribute(),
-  JSXChild: JSXChild()
+const INSPECT_THEME = {
+  ...chromeLight,
+  ...{
+    BASE_BACKGROUND_COLOR: "transparent",
+    TREENODE_PADDING_LEFT: 20,
+    TREENODE_FONT_SIZE: "12px"
+  }
 };
 
 const usePersistedCode = createPersistedState("code");
-const usePersistedParserId = createPersistedState("parser");
 
 const INITIAL_CODE = `<Button.NavLike
   name="Hello"
   something={{ "a": 24 }}
-  ok={true}
+  ok
 >
  	Plain text is always a bit 
   {[25, {}, "hello", <a.b.c> hi! </ a.b.c>]}
@@ -60,19 +43,21 @@ const INITIAL_CODE = `<Button.NavLike
 
 export default function Implementation() {
   const [code, setCode] = usePersistedCode<string>(INITIAL_CODE);
-  const [parserId, setParserId] = usePersistedParserId<string>("JSIdentifier");
-  const parser = useMemo(() => {
-    // @ts-ignore
-    return makeParser(parsers[parserId] || parsers["JSIdentifier"]);
-  }, [parserId]);
+  const parsed = useMemo(() => {
+    try {
+      return { result: LJSX.parse(code) };
+    } catch (error) {
+      return { error };
+    }
+  }, [code]);
 
   return (
     <section id="implementation">
       <h2>
-        <a href="#implementation">Implementation</a>
+        <a href="#implementation">Example implementation</a>
       </h2>
       <p>
-        An example implementation is provided in the{" "}
+        An example parser implementation is provided in the{" "}
         <a href="https://www.npmjs.com/package/literal-jsx">
           <code>literal-jsx</code>
         </a>{" "}
@@ -94,13 +79,11 @@ const data = LJSX.parse('<Button primary text="Hi" />');
         onBeforeChange={() => {}}
       />
       <p>
-        <select value={parserId} onChange={e => setParserId(e.target.value)}>
-          {Object.keys(parsers).map(id => (
-            <option key={id} value={id}>
-              {id}
-            </option>
-          ))}
-        </select>
+        You can play around with the parser below. It will parse the given
+        literal JSX source code starting with the <em className="nt">Value</em>{" "}
+        non-terminal, as per the spec. No factory function is passed, and
+        therefore the content is just transformed to a default content structure
+        detailing the Literal JSX structure.
       </p>
       <CodeMirror
         className="editable"
@@ -111,15 +94,35 @@ const data = LJSX.parse('<Button primary text="Hi" />');
         }}
       />
       <div>
-        <pre
-          css={`
-            max-width: 100%;
-            overflow: auto;
-            white-space: pre-wrap;
-          `}
-        >
-          {JSON.stringify(parser(code), null, 2)}
-        </pre>
+        {"result" in parsed ? (
+          <div
+            css={`
+              white-space: pre;
+              margin-top: 1.4rem;
+              max-width: 100%;
+              overflow-x: auto;
+            `}
+          >
+            <ObjectInspector
+              theme={INSPECT_THEME}
+              data={parsed.result}
+              expandLevel={5}
+            />
+          </div>
+        ) : (
+          <p
+            css={`
+              color: #ca390c;
+              font-weight: bold;
+              font-style: italic;
+            `}
+          >
+            That couldn't be parsed.
+            <br />
+            Sorry, I don't have more info for you right now. Better tooling is
+            still on its way!
+          </p>
+        )}
       </div>
     </section>
   );

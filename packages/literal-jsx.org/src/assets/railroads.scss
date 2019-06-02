@@ -35,8 +35,15 @@ svg.railroad-diagram text.comment {
 }
 svg.railroad-diagram rect {
   stroke-width: 3;
-  stroke: darken(#009688, 5%);
-  fill: #009688;
+  stroke: darken(#949494, 7%);
+  fill: #949494;
+}
+svg.railroad-diagram .new,
+.new svg.railroad-diagram {
+  rect {
+    stroke: darken(#009688, 5%);
+    fill: #009688;
+  }
 }
 svg.railroad-diagram path.diagram-text {
   stroke-width: 3;

@@ -1,4 +1,4 @@
-declare module "railroad-diagrams" {
+declare module "railroad-diagrams/railroad" {
   export const Skip: () => FakeSVG;
   export const Start: (...items: any[]) => FakeSVG;
   export const Stack: (...items: any[]) => FakeSVG;
@@ -18,3 +18,32 @@ declare module "railroad-diagrams" {
 }
 
 declare module "arcsecond";
+
+declare module "literal-jsx" {
+  export type DefaultR = {
+    _JSXElement: true;
+    name: string;
+    attributes: null | {
+      [attr: string]: JSXData<DefaultR>;
+    };
+    children: JSXData<DefaultR>[];
+  };
+
+  export type JSXData<R = DefaultR> =
+    | string
+    | null
+    | boolean
+    | number
+    | JSXData[]
+    | { [key: string]: JSXData<R> }
+    | R;
+
+  export const parse: <R = DefaultR>(
+    code: string,
+    factory?: (
+      name: string,
+      attributes: null | { [attr: string]: JSXData<R> },
+      ...children: JSXData<R>
+    ) => R
+  ) => JSXData<R>;
+}

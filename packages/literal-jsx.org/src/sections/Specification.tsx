@@ -1,6 +1,6 @@
 import "styled-components/macro";
 import React from "react";
-import rr from "railroad-diagrams";
+import rr from "railroad-diagrams/railroad";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
@@ -89,12 +89,15 @@ const JSXL_DIAGRAM_TABS: Array<ITab & { diagram: any }> = [
 ].map(tab => ({
   ...tab,
   content: (
-    <div>
+    <div className="new">
       <div dangerouslySetInnerHTML={{ __html: tab.diagram }} />
       {tab.note || null}
     </div>
   )
 }));
+
+const El = rr.NonTerminal("Element");
+El.attrs.class += " new";
 
 const JSON_DIAGRAM_TABS: ITab[] = [
   {
@@ -102,7 +105,7 @@ const JSON_DIAGRAM_TABS: ITab[] = [
     diagram: rr.ComplexDiagram(
       rr.Choice(
         0,
-        rr.NonTerminal("Element"),
+        El,
         rr.NonTerminal("String"),
         rr.NonTerminal("Number"),
         rr.NonTerminal("Object"),
@@ -201,10 +204,31 @@ export default function Specification() {
       </h2>
       <p>
         Literal JSX subsets JSX in the same spirit as JSON subsets JavaScript.
-        This means some "additional" JSX syntax has been omitted intentionally.
-        For example, JSX elements cannot be assigned unquoted to attributes of
-        other elements, and strings are always double-quoted, just like in JSON.
+        This means some "sugary" JSX syntax has been intentionally omitted. For
+        example, JSX elements cannot be assigned unquoted to attributes of other
+        elements, and strings are always double-quoted, just like in JSON. Some
+        other things to note are:
       </p>
+      <ul>
+        <li>
+          The "root" for the grammer is that <em className="nt">Value</em>{" "}
+          non-terminal. That is to say, Literal JSX "is just JSON", but then
+          with some JSX goodness.
+        </li>
+        <li>
+          There is no "fragment" type (usually written as <code>&lt;&gt;</code>{" "}
+          ... <code>&lt;/&gt;</code>). The way that fragments are used in React
+          essentially boils down to an array, which <em>is</em> expressible in
+          Literal JSX. For example:{" "}
+          <code>[&lt;a /&gt;, &lt;b /&gt;, &lt;c /&gt;]</code>
+        </li>
+        <li>
+          White-space can be freely inserted between pretty much every token,
+          and does not affect semantics. However, the{" "}
+          <em className="nt">plain text</em> non-terminal forms an exception: it
+          greedily eats and preserves white-space left and right.
+        </li>
+      </ul>
       <Tabbed tabs={JSXL_DIAGRAM_TABS} />
       <Tabbed tabs={JSON_DIAGRAM_TABS} />
     </section>
