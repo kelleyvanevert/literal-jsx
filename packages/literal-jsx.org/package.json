@@ -2,6 +2,7 @@
   "name": "literal-jsx.org",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://literal-jsx.org/",
   "dependencies": {
     "@hot-loader/react-dom": "^16.8.6",
     "arcsecond": "^1.3.0",
