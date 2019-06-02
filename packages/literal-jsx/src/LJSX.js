@@ -21,13 +21,13 @@ import {
 import IDENTIFIER_REGEX from "./IdentifierRegex";
 
 const defaultFactory = (name, attributes, ...children) => ({
+  _JSXElement: true,
   name,
   attributes,
   children
 });
 
 const t = takeRight(whitespace);
-const otherwise = x => y => (typeof y === "undefined" ? x : y);
 const curlyBracketed = between(t(char("{")))(t(char("}")));
 const squareBracketed = between(t(char("[")))(t(char("]")));
 const commaSeparated = sepBy(t(char(",")));
@@ -91,8 +91,8 @@ export const JSXAttribute = (factory = defaultFactory) =>
     possibly(
       takeRight(t(char("=")))(
         choice([JSONString, curlyBracketed(JSONValue(factory))])
-      )
-    ).map(otherwise(true))
+      ).map(value => ({ value }))
+    ).map(d => (d === null ? true : d.value))
   ]);
 
 export const JSXPlainText = regex(/^[^}{><]+/);
@@ -130,7 +130,10 @@ export const JSXElement = (factory = defaultFactory) =>
         ])
       ])
     )
-  ]).map(([__, name, [attributes, children]]) => {
+  ]).map(([__, name, [attributePairs, children]]) => {
+    const attributes = attributePairs.reduce((o, [k, v]) => {
+      return { ...o, [k]: v };
+    }, null);
     return factory(name, attributes, ...children);
   });
 
@@ -139,9 +142,6 @@ export const makeParser = arcParser =>
 
 export default {
   parse(str, h = defaultFactory) {
-    return toValue(makeParser(JSXElement(h))(str));
-  },
-  parseJSON(str, h = defaultFactory) {
     return toValue(makeParser(JSONValue(h))(str));
   }
 };
