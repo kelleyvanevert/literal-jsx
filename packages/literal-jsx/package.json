@@ -1,6 +1,6 @@
 {
   "name": "literal-jsx",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "An example implementation of a Literal JSX parser (see https://literal-jsx.org/)",
   "main": "./lib/index.js",
@@ -34,6 +34,6 @@
     "clean": "rimraf lib",
     "test": "jest",
     "build": "cross-env BABEL_ENV=production babel src --out-dir lib",
-    "prepublish": "yarn run clean && yarn run test && yarn run build"
+    "prepare": "yarn run clean && yarn run test && yarn run build"
   }
 }

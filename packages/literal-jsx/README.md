@@ -3,7 +3,7 @@ This is an example implementation of Literal JSX. (Note: it is not particularly 
 ## Literal JSX
 
 <p align="center">
-  <img src="./logo.svg" height="140" />
+  <img src="https://literal-jsx.org/static/media/logo.e0c3fb5f.svg" height="140" />
 </p>
 
 **Literal JSX** is a lightweight format for interchanging content structures potentially rich in shape and data. It extends JSON by adding an "Element" node type, which is shaped as JSX, but which can only contain literal (JSON) data structures. For more information, see http://literal-jsx.org/.
