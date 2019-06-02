@@ -2,47 +2,67 @@ import "styled-components/macro";
 import React, { useMemo } from "react";
 import createPersistedState from "use-persisted-state";
 import { Controlled as CodeMirror } from "react-codemirror2";
-import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/jsx/jsx";
 import "codemirror/lib/codemirror.css";
-import "codemirror/theme/material.css";
+import "~/assets/codemirror-theme.scss";
 import LJSX, {
   makeParser,
-  Identifier,
-  Element,
-  Fragment,
-  Name,
-  Attribute,
-  Child
-} from "~/lib/parse-v2";
+  JSONNumber,
+  JSONString,
+  JSONArray,
+  JSONObject,
+  JSONValue,
+  JSIdentifier,
+  JSXElement,
+  JSXName,
+  JSXAttribute,
+  JSXChild
+} from "~/lib/LJSX";
+
+// @ts-ignore
+window.LJSX = LJSX;
 
 const CM_OPTS = {
-  mode: "plain",
-  theme: "material",
-  lineNumbers: true,
+  mode: "text/jsx",
+  theme: "ljsx",
+  lineNumbers: false,
   smartIndent: true,
   tabSize: 2,
   indentWithTabs: false
 };
 
 const parsers = {
-  "JSX - Identifier": Identifier,
-  "JSX - Name": Name,
-  // invoked in order to use default factory fn
-  "JSX - Element": Element(),
-  "JSX - Fragment": Fragment(),
-  "JSX - Attribute": Attribute(),
-  "JSX - Child": Child()
+  JSONString,
+  JSONNumber,
+  JSONArray: JSONArray(),
+  JSONObject: JSONObject(),
+  JSONValue: JSONValue(),
+  JSIdentifier,
+  JSXName,
+  JSXElement: JSXElement(),
+  // "JSX - Fragment": Fragment(),
+  JSXAttribute: JSXAttribute(),
+  JSXChild: JSXChild()
 };
 
 const usePersistedCode = createPersistedState("code");
 const usePersistedParserId = createPersistedState("parser");
 
+const INITIAL_CODE = `<Button.NavLike
+  name="Hello"
+  something={{ "a": 24 }}
+  ok={true}
+>
+ 	Plain text is always a bit 
+  {[25, {}, "hello", <a.b.c> hi! </ a.b.c>]}
+</Button.NavLike>`;
+
 export default function Implementation() {
-  const [code, setCode] = usePersistedCode<string>("");
-  const [parserId, setParserId] = usePersistedParserId<string>();
+  const [code, setCode] = usePersistedCode<string>(INITIAL_CODE);
+  const [parserId, setParserId] = usePersistedParserId<string>("JSIdentifier");
   const parser = useMemo(() => {
     // @ts-ignore
-    return makeParser(parsers[parserId] || parsers["JSX - Identifier"]);
+    return makeParser(parsers[parserId] || parsers["JSIdentifier"]);
   }, [parserId]);
 
   return (
@@ -61,7 +81,21 @@ export default function Implementation() {
         css={`
           .react-codemirror2,
           .CodeMirror {
+            max-width: 100%;
             height: 100%;
+            box-sizing: border-box;
+          }
+
+          .CodeMirror {
+            transition: box-shadow 0.1s ease, border-color 0.1s ease;
+
+            box-shadow: 4px 4px 0 #dedcd9;
+            border: 1px solid white;
+
+            &-focused {
+              box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2), 4px 4px 0 #009688;
+              border-color: #009688;
+            }
           }
         `}
       >

@@ -28,19 +28,20 @@ const JSXL_DIAGRAM_TABS: Array<ITab & { diagram: any }> = [
           ">"
         )
       )
-    )
+    ),
+    note: <p>*must match the one on in the opening tag</p>
   },
-  {
-    title: "Fragment",
-    diagram: rr.ComplexDiagram(
-      "<",
-      ">",
-      rr.ZeroOrMore(rr.NonTerminal("Child")),
-      "<",
-      "/",
-      ">"
-    )
-  },
+  // {
+  //   title: "Fragment",
+  //   diagram: rr.ComplexDiagram(
+  //     "<",
+  //     ">",
+  //     rr.ZeroOrMore(rr.NonTerminal("Child")),
+  //     "<",
+  //     "/",
+  //     ">"
+  //   )
+  // },
   {
     title: "Name",
     diagram: rr.ComplexDiagram(
@@ -50,6 +51,11 @@ const JSXL_DIAGRAM_TABS: Array<ITab & { diagram: any }> = [
         rr.ZeroOrMore(rr.Sequence(".", rr.NonTerminal("Identifier"))),
         rr.Sequence(":", rr.NonTerminal("Identifier"))
       )
+    ),
+    note: (
+      <p>
+        <em>Identifier</em> is any valid variable name in JavaScript
+      </p>
     )
   },
   {
@@ -82,24 +88,13 @@ const JSXL_DIAGRAM_TABS: Array<ITab & { diagram: any }> = [
   }
 ].map(tab => ({
   ...tab,
-  content: <div dangerouslySetInnerHTML={{ __html: tab.diagram }} />
+  content: (
+    <div>
+      <div dangerouslySetInnerHTML={{ __html: tab.diagram }} />
+      {tab.note || null}
+    </div>
+  )
 }));
-
-JSXL_DIAGRAM_TABS[0].content = (
-  <div>
-    <div>{JSXL_DIAGRAM_TABS[0].content}</div>
-    <p>*must match the one on in the opening tag</p>
-  </div>
-);
-
-JSXL_DIAGRAM_TABS[2].content = (
-  <div>
-    <div>{JSXL_DIAGRAM_TABS[2].content}</div>
-    <p>
-      <em>Identifier</em> is any valid variable name in JavaScript
-    </p>
-  </div>
-);
 
 const JSON_DIAGRAM_TABS: ITab[] = [
   {

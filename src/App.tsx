@@ -115,7 +115,7 @@ function App() {
               <li>Motivation</li>
               <li>Specification</li>
               <li>Examples</li>
-              <li>Reference implementation</li>
+              <li>Implementation</li>
             </ul>
           </aside>
         </div>

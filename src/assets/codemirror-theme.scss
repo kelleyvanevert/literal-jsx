@@ -1,0 +1,125 @@
+/*
+  This is an adaptation of the MDN-LIKE theme.
+*/
+
+/*
+  MDN-LIKE Theme - Mozilla
+  Ported to CodeMirror by Peter Kroon <plakroon@gmail.com>
+  Report bugs/issues here: https://github.com/codemirror/CodeMirror/issues
+  GitHub: @peterkroon
+
+  The mdn-like theme is inspired on the displayed code examples at: https://developer.mozilla.org/en-US/docs/Web/CSS/animation
+
+*/
+.cm-s-ljsx {
+  &.CodeMirror {
+    color: #666;
+    background: white;
+    padding: 0.4rem;
+
+    font-family: "Fira Mono", "Monaco", "Menlo", "DejaVu Sans Mono", "Consolas",
+      monospace;
+    font-size: 90%;
+  }
+
+  div.CodeMirror-selected {
+    background: #d5d5d5;
+  }
+  .CodeMirror-line::selection,
+  .CodeMirror-line > span::selection,
+  .CodeMirror-line > span > span::selection {
+    background: #d5d5d5;
+  }
+  .CodeMirror-line::-moz-selection,
+  .CodeMirror-line > span::-moz-selection,
+  .CodeMirror-line > span > span::-moz-selection {
+    background: #d5d5d5;
+  }
+
+  .CodeMirror-gutters {
+    background: #f8f8f8;
+    color: #333;
+  }
+  .CodeMirror-linenumber {
+    color: #aaa;
+  }
+  .CodeMirror-cursor {
+    border-left: 2px solid #222;
+  }
+
+  .cm-keyword {
+    color: #6262ff;
+  }
+  .cm-atom {
+    color: #e91e63;
+  }
+  .cm-number {
+    color: #da3024;
+  }
+  .cm-def {
+    color: #8da6ce;
+  }
+  span.cm-variable-3,
+  span.cm-def,
+  span.cm-type {
+    color: #07a;
+  }
+
+  .cm-variable {
+    color: #07a;
+  }
+  .cm-property {
+    color: #905;
+  }
+  .cm-qualifier {
+    color: #690;
+  }
+
+  .cm-operator {
+    color: #cda869;
+  }
+  .cm-comment {
+    color: #777;
+    font-weight: normal;
+  }
+  .cm-string {
+    color: #07a;
+  }
+  .cm-string-2 {
+    color: #bd6b18;
+  } /*?*/
+  .cm-meta {
+    color: #000;
+  } /*?*/
+  .cm-builtin {
+    color: #333;
+  } /*?*/
+  .cm-tag {
+    color: #007d71;
+  }
+  .cm-attribute {
+    color: #555;
+  } /*?*/
+  .cm-header {
+    color: #ff6400;
+  }
+  .cm-hr {
+    color: #aeaeae;
+  }
+  .cm-link {
+    color: #ad9361;
+    font-style: italic;
+    text-decoration: none;
+  }
+  .cm-error {
+    border-bottom: 1px solid red;
+  }
+
+  &div .CodeMirror-activeline-background {
+    background: #efefff;
+  }
+  &div span.CodeMirror-matchingbracket {
+    outline: 1px solid grey;
+    color: inherit;
+  }
+}
