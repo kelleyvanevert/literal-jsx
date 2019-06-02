@@ -8,6 +8,7 @@
     "classnames": "^2.2.6",
     "codemirror": "^5.47.0",
     "jspath": "^0.4.0",
+    "literal-jsx": "^0.1.1",
     "lodash.mapvalues": "^4.6.0",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",

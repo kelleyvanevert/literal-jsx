@@ -17,7 +17,8 @@ import LJSX, {
   JSXName,
   JSXAttribute,
   JSXChild
-} from "~/lib/LJSX";
+  // @ts-ignore
+} from "literal-jsx/lib/LJSX";
 
 // @ts-ignore
 window.LJSX = LJSX;
