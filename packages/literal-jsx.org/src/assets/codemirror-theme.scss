@@ -11,8 +11,24 @@
   The mdn-like theme is inspired on the displayed code examples at: https://developer.mozilla.org/en-US/docs/Web/CSS/animation
 
 */
+
+.editable .cm-s-ljsx.CodeMirror {
+  transition: box-shadow 0.1s ease, border-color 0.1s ease;
+
+  box-shadow: 4px 4px 0 #dedcd9;
+  border: 1px solid white;
+
+  &-focused {
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2), 4px 4px 0 #009688;
+    border-color: #009688;
+  }
+}
+
 .cm-s-ljsx {
   &.CodeMirror {
+    max-width: 100%;
+    height: auto;
+
     color: #666;
     background: white;
     padding: 0.4rem;

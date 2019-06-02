@@ -1,18 +1,26 @@
 <svg width="300" height="200" viewBox="-150 -100 300 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  <linearGradient id="a" x2="0" y2="1">
+  <linearGradient id="bw_vert" x2="0" y2="1">
     <stop offset="0%" stop-color="#ccc"/>
     <stop offset="100%"/>
   </linearGradient>
-  <linearGradient id="b">
+  <linearGradient id="bw_horz">
     <stop offset="0%" stop-color="#ccc"/>
     <stop offset="100%"/>
+  </linearGradient>
+  <linearGradient id="green_vert" x2="0" y2="1">
+    <stop offset="0%" stop-color="#b9c7c6"/>
+    <stop offset="100%" stop-color="#00675d" />
+  </linearGradient>
+  <linearGradient id="green_horz">
+    <stop offset="0%" stop-color="#b9c7c6"/>
+    <stop offset="100%" stop-color="#00675d" />
   </linearGradient>
   <g stroke="rgba(0,0,0,.1)" stroke-linecap="round" stroke-linejoin="round">
-    <path fill="url(#a)" d="M112.24564363 61.29137638l28.0614109-19.1978441L56.12282181-15.5l112.24564363-76.79137638h-56.12282181L0-15.5z" transform="translate(-140.30705453)"/>
-    <path fill="url(#b)" d="M56.12282181-15.5L78.779109 0l89.58935645-61.29137638L280.61410907 15.5v-31L168.36846544-92.29137638z" transform="translate(-140.30705453)"/>
+    <path fill="url(#bw_vert)" d="M112.24564363 61.29137638l28.0614109-19.1978441L56.12282181-15.5l112.24564363-76.79137638h-56.12282181L0-15.5z" transform="translate(-140.30705453)"/>
+    <path fill="url(#bw_horz)" d="M56.12282181-15.5L78.779109 0l89.58935645-61.29137638L280.61410907 15.5v-31L168.36846544-92.29137638z" transform="translate(-140.30705453)"/>
     <g>
-      <path fill="url(#a)" d="M112.24564363 61.29137638l28.0614109-19.1978441L56.12282181-15.5l112.24564363-76.79137638h-56.12282181L0-15.5z" transform="rotate(180 70.15352727 0)"/>
-      <path fill="url(#b)" d="M56.12282181-15.5L78.779109 0l89.58935645-61.29137638L280.61410907 15.5v-31L168.36846544-92.29137638z" transform="rotate(180 70.15352727 0)"/>
+      <path fill="url(#bw_vert)" d="M112.24564363 61.29137638l28.0614109-19.1978441L56.12282181-15.5l112.24564363-76.79137638h-56.12282181L0-15.5z" transform="rotate(180 70.15352727 0)"/>
+      <path fill="url(#bw_horz)" d="M56.12282181-15.5L78.779109 0l89.58935645-61.29137638L280.61410907 15.5v-31L168.36846544-92.29137638z" transform="rotate(180 70.15352727 0)"/>
     </g>
   </g>
 </svg>

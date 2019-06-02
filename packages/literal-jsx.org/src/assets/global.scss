@@ -4,6 +4,7 @@ html,
 body {
   font-family: serif;
   font-size: 18px;
+  line-height: 130%;
 }
 
 body {
@@ -12,6 +13,32 @@ body {
   background: #f4f2ef;
 }
 
+h1 {
+  line-height: 140%;
+}
+
+h2 {
+  margin: 0;
+  padding: 2rem 0 1rem 0;
+}
+
+p {
+  margin: 1rem 0;
+}
+
 .lead {
-  font-size: 120%;
+  font-size: 115%;
+  line-height: 140%;
+}
+
+a {
+  color: #000;
+}
+
+code {
+  font-family: "Fira Mono", "Monaco", "Menlo", "DejaVu Sans Mono", "Consolas",
+    monospace;
+  font-size: 80%;
+  background: #d6dfe0;
+  padding: 1px 2px;
 }

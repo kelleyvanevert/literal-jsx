@@ -67,8 +67,32 @@ export default function Implementation() {
   }, [parserId]);
 
   return (
-    <section>
-      <h2>Implementation</h2>
+    <section id="implementation">
+      <h2>
+        <a href="#implementation">Implementation</a>
+      </h2>
+      <p>
+        An example implementation is provided in the{" "}
+        <a href="https://www.npmjs.com/package/literal-jsx">
+          <code>literal-jsx</code>
+        </a>{" "}
+        npm package. It can be used as follows:
+      </p>
+      <CodeMirror
+        value={`import LJSX from "literal-jsx";
+
+const data = LJSX.parse('<Button primary text="Hi" />');
+
+// LJSX.parse: (jsx: string, factory?: Factory) => Value
+
+// type Factory = (
+//   name: string,
+//   attributes: null | { [key: string]: Value },
+//   ...children: Value[]
+// ) => any`}
+        options={{ ...CM_OPTS, readOnly: "nocursor" }}
+        onBeforeChange={() => {}}
+      />
       <p>
         <select value={parserId} onChange={e => setParserId(e.target.value)}>
           {Object.keys(parsers).map(id => (
@@ -78,36 +102,14 @@ export default function Implementation() {
           ))}
         </select>
       </p>
-      <div
-        css={`
-          .react-codemirror2,
-          .CodeMirror {
-            max-width: 100%;
-            height: 100%;
-            box-sizing: border-box;
-          }
-
-          .CodeMirror {
-            transition: box-shadow 0.1s ease, border-color 0.1s ease;
-
-            box-shadow: 4px 4px 0 #dedcd9;
-            border: 1px solid white;
-
-            &-focused {
-              box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2), 4px 4px 0 #009688;
-              border-color: #009688;
-            }
-          }
-        `}
-      >
-        <CodeMirror
-          value={code}
-          options={CM_OPTS}
-          onBeforeChange={(editor, data, value) => {
-            setCode(value);
-          }}
-        />
-      </div>
+      <CodeMirror
+        className="editable"
+        value={code}
+        options={CM_OPTS}
+        onBeforeChange={(editor, data, value) => {
+          setCode(value);
+        }}
+      />
       <div>
         <pre
           css={`

@@ -2,8 +2,10 @@ import React from "react";
 
 export default function Examples() {
   return (
-    <section>
-      <h2>Examples</h2>
+    <section id="examples">
+      <h2>
+        <a href="#examples">Examples</a>
+      </h2>
     </section>
   );
 }

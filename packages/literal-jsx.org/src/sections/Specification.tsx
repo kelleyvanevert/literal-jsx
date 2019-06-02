@@ -195,8 +195,10 @@ const JSON_DIAGRAM_TABS: ITab[] = [
 
 export default function Specification() {
   return (
-    <section>
-      <h2>Specification</h2>
+    <section id="specification">
+      <h2>
+        <a href="#specification">Specification</a>
+      </h2>
       <p>
         Literal JSX subsets JSX in the same spirit as JSON subsets JavaScript.
         This means some "additional" JSX syntax has been omitted intentionally.
