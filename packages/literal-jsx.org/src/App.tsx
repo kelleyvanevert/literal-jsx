@@ -42,7 +42,7 @@ function App() {
               >
                 <em>
                   Let JSX embrace its potential as a content authoring markup
-                  format for the component-based design era!
+                  format for the component-based era!
                 </em>
               </p>
             </div>
