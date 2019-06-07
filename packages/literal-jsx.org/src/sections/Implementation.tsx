@@ -7,7 +7,9 @@ import "codemirror/lib/codemirror.css";
 import "~/assets/codemirror-theme.scss";
 // @ts-ignore
 import { ObjectInspector, chromeLight } from "react-inspector";
-import LJSX from "literal-jsx";
+// @ts-ignore
+import LJSX from "@literal-jsx/parser";
+import Tabbed from "~/components/Tabbed";
 
 // @ts-ignore
 window.LJSX = LJSX;
@@ -37,7 +39,7 @@ const INITIAL_CODE = `<Button.NavLike
   something={{ "a": 24 }}
   ok
 >
- 	Plain text is always a bit 
+ 	Plain text is always a <bit:boring />
   {[25, {}, "hello", <a.b.c> hi! </ a.b.c>]}
 </Button.NavLike>`;
 
@@ -45,7 +47,7 @@ export default function Implementation() {
   const [code, setCode] = usePersistedCode<string>(INITIAL_CODE);
   const parsed = useMemo(() => {
     try {
-      return { result: LJSX.parse(code) };
+      return { value: LJSX.parseValue(code), ast: LJSX.parseAST(code) };
     } catch (error) {
       return { error };
     }
@@ -58,23 +60,14 @@ export default function Implementation() {
       </h2>
       <p>
         An example parser implementation is provided in the{" "}
-        <a href="https://www.npmjs.com/package/literal-jsx">
-          <code>literal-jsx</code>
+        <a href="https://www.npmjs.com/package/@literal-jsx/parser">
+          <code>@literal-jsx/parser</code>
         </a>{" "}
         npm package. It can be used as follows:
       </p>
       <CodeMirror
-        value={`import LJSX from "literal-jsx";
-
-const data = LJSX.parse('<Button primary text="Hi" />');
-
-// LJSX.parse: (jsx: string, factory?: Factory) => Value
-
-// type Factory = (
-//   name: string,
-//   attributes: null | { [key: string]: Value },
-//   ...children: Value[]
-// ) => any`}
+        value={`import { parseValue, parseAST } from "literal-jsx";
+const data = parseValue('<Button primary text="Hi" />');`}
         options={{ ...CM_OPTS, readOnly: "nocursor" }}
         onBeforeChange={() => {}}
       />
@@ -94,36 +87,54 @@ const data = LJSX.parse('<Button primary text="Hi" />');
         }}
       />
       <div>
-        {"result" in parsed ? (
-          <div
-            css={`
-              white-space: pre;
-              margin-top: 1.4rem;
-              max-width: 100%;
-              overflow-x: auto;
-            `}
-          >
-            <ObjectInspector
-              theme={INSPECT_THEME}
-              data={parsed.result}
-              expandLevel={5}
-            />
-          </div>
-        ) : (
-          <p
-            css={`
-              color: #ca390c;
-              font-weight: bold;
-              font-style: italic;
-            `}
-          >
-            That couldn't be parsed.
-            <br />
-            Sorry, I don't have more info for you right now. Better tooling is
-            still on its way!
-          </p>
-        )}
+        <Tabbed
+          tabs={[
+            {
+              title: "Value",
+              content:
+                "value" in parsed
+                  ? inspect(parsed.value)
+                  : errorMsg(parsed.error)
+            },
+            {
+              title: "AST",
+              content:
+                "ast" in parsed ? inspect(parsed.ast) : errorMsg(parsed.error)
+            }
+          ]}
+        />
       </div>
     </section>
+  );
+}
+
+function inspect(something: any) {
+  return (
+    <div
+      css={`
+        white-space: pre;
+        margin-top: 1.4rem;
+        max-width: 100%;
+        overflow-x: auto;
+        text-align: left;
+      `}
+    >
+      <ObjectInspector theme={INSPECT_THEME} data={something} expandLevel={5} />
+    </div>
+  );
+}
+
+function errorMsg(error: Error) {
+  return (
+    <div
+      css={`
+        color: #ca390c;
+        font-weight: bold;
+        text-align: left;
+      `}
+    >
+      <p css="font-style: italic;">That couldn't be parsed :(</p>
+      <pre css="font-size: 80%;">{error.toString()}</pre>
+    </div>
   );
 }

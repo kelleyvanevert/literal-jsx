@@ -72,13 +72,13 @@ function App() {
           but really, low-hanging fruit. Inspired by{" "}
           <a href="https://json.org/">JSON</a>. Also, this site and the example
           implementation could not have been made without these lovely
-          libraries: Tab Atkins'{" "}
+          libraries: tabatkins'{" "}
           <a href="https://github.com/tabatkins/railroad-diagrams">
             <code>railroad-diagrams</code>
           </a>
-          , Francis Stokes'{" "}
+          , Hardmath123's{" "}
           <a href="https://github.com/francisrstokes/arcsecond">
-            <code>arcsecond</code>
+            <code>nearley.js</code>
           </a>
           .
         </div>
