@@ -60,6 +60,6 @@ const components = {
 const h = (name, attrs, ...children) =>
   React.createElement(components[name] || name, attrs, ...children);
 
-LJSX.parse(`<Button size="large" primary>Hi {"there"}</Button>`, h);
+parseValue(`<Button size="large" primary>Hi {"there"}</Button>`, h);
 // React.createElement(Button, { size: "large", primary: true }, "Hi ", "there")
 ```
