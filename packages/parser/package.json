@@ -1,15 +1,11 @@
 {
   "name": "@literal-jsx/parser",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An example parser implementation for Literal JSX using nearley.js + moo",
   "main": "lib/index.js",
   "author": "Kelley van Evert <hello@klve.nl>",
   "homepage": "https://literal-jsx.org/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kelleyvanevert/literal-jsx",
-    "directory": "packages/parser"
-  },
+  "repository": "github:kelleyvanevert/literal-jsx",
   "keywords": [
     "literal-jsx",
     "ljsx",
