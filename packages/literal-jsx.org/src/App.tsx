@@ -77,7 +77,7 @@ function App() {
             <code>railroad-diagrams</code>
           </a>
           , Hardmath123's{" "}
-          <a href="https://github.com/francisrstokes/arcsecond">
+          <a href="https://nearley.js.org/">
             <code>nearley.js</code>
           </a>
           .
