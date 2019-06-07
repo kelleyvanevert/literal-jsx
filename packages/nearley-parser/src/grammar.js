@@ -5,37 +5,7 @@ function id(x) { return x[0]; }
 
 
 const merge = require("deepmerge");
-const moo = require("moo");
-
-const lexer = moo.states({
-  jsonValue: {
-    space: { match: /\s+/, lineBreaks: true },
-    number: /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
-    string: /"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/,
-    "{": { match: "{", push: "jsonValue" },
-    "}": { match: "}", pop: 1 },
-    "[": "[",
-    "]": "]",
-    ",": ",",
-    ":": ":",
-    "true": "true",
-    "false": "false",
-    "null": "null",
-    plaintext: { match: /(?:(?!(?:\{|\}|<))[^])+/, lineBreaks: true },
-    "<": { match: "<", push: "jsxTag" }
-  },
-  jsxTag: {
-    space: { match: /\s+/, lineBreaks: true },
-    string: /"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/,
-    "=": "=",
-    ".": ".",
-    ":": ":",
-    identifier: require("./JSIdentifier"),
-    "/": "/",
-    ">": { match: ">", pop: 1 },
-    "{": { match: "{", push: "jsonValue" }
-  }
-});
+const lexer = require("./lexer");
 
 
 
@@ -91,7 +61,7 @@ function plaintext_literal([token]) {
 
 function mergeWhitespaceInPlaintext(...children) {
   const nodes = [];
-  for (child of children) {
+  children.forEach(child => {
     if (child.type === "space") {
       if (nodes[0] && nodes[0].type === "Literal") {
         nodes[0].value += child.value;
@@ -107,7 +77,7 @@ function mergeWhitespaceInPlaintext(...children) {
     } else if (child.type) {
       nodes.unshift(child);
     }
-  }
+  });
   return nodes.reverse();
 }
 
@@ -122,7 +92,7 @@ function pos({ line, col, offset, text }, addLen = false) {
     const [first, ...rest] = text.split(/\r?\n/);
     position.line += rest.length;
     if (rest.length > 0) {
-      position.column = rest[rest.length - 1].length;
+      position.column = rest[rest.length - 1].length + 1; // moo column numbers are 1-based
     } else {
       position.column += first.length;
     }
