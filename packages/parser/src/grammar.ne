@@ -6,7 +6,7 @@
 @{%
 
 const merge = require("deepmerge");
-const lexer = require("./lexer");
+const lexer = require("./lexer")();
 
 %}
 

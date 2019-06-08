@@ -1,6 +1,6 @@
 {
   "name": "@literal-jsx/parser",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "An example parser implementation for Literal JSX using nearley.js + moo",
   "main": "lib/index.js",
   "author": "Kelley van Evert <hello@klve.nl>",

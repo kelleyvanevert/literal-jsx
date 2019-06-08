@@ -1,4 +1,5 @@
-const { lexer, parseAST, parseValue } = require(".");
+const { makeLexer, parseAST, parseValue } = require(".");
+const lexer = makeLexer();
 
 const BASIC = `
     <Hi there={42}> plain

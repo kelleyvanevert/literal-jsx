@@ -19,8 +19,8 @@ import {
   // (you can optionally pass it a component hydration factory)
   parseValue,
 
-  // the moo lexer which is used under the hood
-  lexer,
+  // create a moo lexer like the one used under the hood
+  makeLexer,
 
   // the nearley.js generated grammar
   grammar,
