@@ -5,6 +5,7 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
 import Tabbed, { ITab } from "~/components/Tabbed";
+import LinkIcon from "~/components/LinkIcon";
 
 // @ts-ignore
 rr.Diagram.INTERNAL_ALIGNMENT = "left";
@@ -200,7 +201,10 @@ export default function Specification() {
   return (
     <section id="specification">
       <h2>
-        <a href="#specification">Specification</a>
+        <a href="#specification">
+          Specification
+          <LinkIcon />
+        </a>
       </h2>
       <p>
         Literal JSX subsets JSX in the same spirit as JSON subsets JavaScript.

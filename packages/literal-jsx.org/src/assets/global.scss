@@ -10,7 +10,7 @@ body {
 body {
   margin: 0;
   padding: 0;
-  background: #f4f2ef;
+  background: white;
 }
 
 h1 {
@@ -20,6 +20,14 @@ h1 {
 h2 {
   margin: 0;
   padding: 2rem 0 1rem 0;
+
+  .LinkIcon {
+    display: none;
+  }
+
+  &:hover .LinkIcon {
+    display: inline;
+  }
 }
 
 p {

@@ -16,7 +16,8 @@
   transition: box-shadow 0.1s ease, border-color 0.1s ease;
 
   box-shadow: 4px 4px 0 #dedcd9;
-  border: 1px solid white;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
 
   &-focused {
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2), 4px 4px 0 #009688;

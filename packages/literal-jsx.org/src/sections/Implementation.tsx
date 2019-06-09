@@ -10,6 +10,7 @@ import { ObjectInspector, chromeLight } from "react-inspector";
 // @ts-ignore
 import LJSX from "@literal-jsx/parser";
 import Tabbed from "~/components/Tabbed";
+import LinkIcon from "~/components/LinkIcon";
 
 // @ts-ignore
 window.LJSX = LJSX;
@@ -56,7 +57,10 @@ export default function Implementation() {
   return (
     <section id="implementation">
       <h2>
-        <a href="#implementation">Example implementation</a>
+        <a href="#implementation">
+          Example implementation
+          <LinkIcon />
+        </a>
       </h2>
       <p>
         An example parser implementation is provided in the{" "}

@@ -1,10 +1,14 @@
 import React from "react";
+import LinkIcon from "~/components/LinkIcon";
 
 export default function Motivation() {
   return (
     <section id="motivation">
       <h2>
-        <a href="#motivation">Motivation</a>
+        <a href="#motivation">
+          Motivation
+          <LinkIcon />
+        </a>
       </h2>
       <p>
         Literal JSX aims to serve a similar purpose as JSON did: by subsetting
@@ -27,21 +31,19 @@ export default function Motivation() {
         a simple standard for describing nominal and data-rich content
         structures, as opposed to the various case-specific "grammar-hacks" that
         are now commonly used for this purpose. Literal JSX aims to satisfy that
-        need.
-      </p>
-      <p>
-        The idea of interspersing JSX in markdown is not new, and libraries such
-        as <a href="https://mdxjs.com/">MDX</a> are currently popularizing this
-        idea. However MDX is a <em>library</em> dependent on a full-blown
-        JavaScript parser, thereby making it technically non-trivial and dubious
-        to compile content at runtime (e.g. in the browser). By instead just
-        outlining a narrow and unambiguous subset grammar of JSX, Literal JSX
-        defines a <em>standard</em> that is language- and framework-agnostic.
+        need. The idea of interspersing JSX in markdown is not new, and
+        libraries such as <a href="https://mdxjs.com/">MDX</a> are currently
+        popularizing this idea. However MDX is a <em>library</em> dependent on a
+        full-blown JavaScript parser, thereby making it technically non-trivial
+        and dubious to compile content at runtime (e.g. in the browser). By
+        instead just outlining a narrow and unambiguous subset grammar of JSX,
+        Literal JSX defines a <em>standard</em> that is language- and
+        framework-agnostic.
       </p>
       <p>
         To summarize: Literal JSX aims to privide a{" "}
         <em>straightforward and intuitive standard</em> for content-authoring in
-        the component-based design era.
+        the component-based era.
       </p>
     </section>
   );

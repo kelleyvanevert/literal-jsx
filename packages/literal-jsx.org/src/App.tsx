@@ -53,11 +53,11 @@ function App() {
             <a href="https://json.org">
               <strong>JSON</strong>
             </a>{" "}
-            by adding the JSX-like <em className="nt">Element</em> type as a
-            possible value type aside objects, arrays, numbers, strings,
-            booleans, and <code>null</code>. However, instead of the full
-            JavaScript expression syntax, only JSON data (possibly including
-            more <em className="nt">Element</em> nodes) is allowed inside of its
+            by adding the JSX-like <em>Element</em> type as a possible value
+            type aside objects, arrays, numbers, strings, booleans, and{" "}
+            <code>null</code>. However, instead of the full JavaScript
+            expression syntax, only JSON data (through possibly nesting more{" "}
+            <em>Element</em> nodes recursively) are allowed inside of its
             attributes ("props") and children.
           </p>
           <Motivation />
@@ -68,11 +68,10 @@ function App() {
       </main>
       <footer>
         <div className="wrap">
-          An idea proposed by <a href="https://klve.nl/">Kelley van Evert</a>,
-          but really, low-hanging fruit. Inspired by{" "}
-          <a href="https://json.org/">JSON</a>. Also, this site and the example
-          implementation could not have been made without these lovely
-          libraries: tabatkins'{" "}
+          An idea proposed by <a href="https://klve.nl/">Kelley van Evert</a>.
+          Inspired by <a href="https://json.org/">JSON</a>. Also, this site and
+          the example implementation could not have been made without these
+          lovely libraries: tabatkins'{" "}
           <a href="https://github.com/tabatkins/railroad-diagrams">
             <code>railroad-diagrams</code>
           </a>
