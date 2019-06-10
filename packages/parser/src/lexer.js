@@ -1,11 +1,11 @@
-const moo = require("moo");
+import moo from "moo";
 
 const common = {
   space: { match: /\s+/, lineBreaks: true },
   string: /"(?:\\["bfnrt\/\\]|\\u[a-fA-F0-9]{4}|[^"\\])*"/
 };
 
-module.exports = () =>
+export default () =>
   moo.states({
     jsonValue: {
       ...common,

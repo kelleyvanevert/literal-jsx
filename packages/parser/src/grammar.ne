@@ -8,6 +8,13 @@
 const merge = require("deepmerge");
 const lexer = require("./lexer")();
 
+// These two are just placeholder variable names, for a little 'bug'
+//  in the way the nearley compiler works. Because the generated
+//  grammar code contains something like this:
+//  `lexer.has("identifier") ? lexer.get("identifier") : identifier`
+const identifier = () => { throw new Error("should not happen") };
+const plaintext = () => { throw new Error("should not happen") };
+
 %}
 
 @lexer lexer

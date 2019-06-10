@@ -1,6 +1,6 @@
-const nearley = require("nearley");
-const makeLexer = require("./lexer");
-const grammar = require("./grammar");
+import nearley from "nearley";
+import makeLexer from "./lexer";
+import grammar from "./grammar.ne";
 
 class Parser extends nearley.Parser {
   constructor() {
@@ -23,7 +23,7 @@ function parseValue(source, h = defaultFactory) {
   return toValue(ast, h);
 }
 
-module.exports = {
+export default {
   makeLexer,
   grammar,
   Parser,

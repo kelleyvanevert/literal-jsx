@@ -1,18 +1,21 @@
 module.exports = {
   env: {
     development: {
-      presets: ["@babel/preset-env"],
+      presets: [["@babel/env", { modules: "commonjs" }]],
       plugins: ["add-module-exports"],
-      ignore: ["**/*.spec.js"]
+      ignore: ["**/*.spec.js"],
+      exclude: ["node_modules"]
     },
     production: {
-      presets: ["@babel/preset-env", "minify"],
+      presets: [["@babel/env", { modules: "commonjs" }], "minify"],
       plugins: ["add-module-exports"],
-      ignore: ["**/*.spec.js"]
+      ignore: ["**/*.spec.js"],
+      exclude: ["node_modules"]
     },
     test: {
-      presets: ["@babel/preset-env"],
-      plugins: ["add-module-exports"]
+      presets: [["@babel/env", { modules: "commonjs" }]],
+      plugins: ["add-module-exports"],
+      exclude: ["node_modules"]
     }
   }
 };
