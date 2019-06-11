@@ -20,6 +20,15 @@ const COMPLICATED = `
         </Button.NavLike>
       `;
 
+const BRACES_IN_SOURCE_IN_CONTENT = `
+  <Markdown>
+  \`\`\`js
+  // So there's some code
+  function hi() {}
+  \`\`\`
+  </Markdown>
+`;
+
 describe("lexer", () => {
   it("should lex correctly", () => {
     lexer.reset("6");
@@ -74,6 +83,10 @@ describe("parser", () => {
         "\n        "
       ]
     });
+  });
+
+  it("should parse braces in plaintext content", () => {
+    expect(parseAST(BRACES_IN_SOURCE_IN_CONTENT)).toBeTruthy();
   });
 
   it("should generate correct location data", () => {

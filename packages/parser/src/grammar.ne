@@ -109,6 +109,7 @@ furtherElement ->
 
 child ->
     %plaintext {% plaintext_literal %}
+  | %codeblock_backticks {% plaintext_literal %}
   | element {% id %}
   | expression {% id %}
 
