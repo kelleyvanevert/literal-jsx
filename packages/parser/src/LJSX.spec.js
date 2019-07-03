@@ -1,6 +1,16 @@
 const { makeLexer, parseAST, parseValue } = require(".");
 const lexer = makeLexer();
 
+const W_NUMBER = `<Bla> 42 </Bla>`;
+
+const W_ARRAY = `<Bla> [42] </Bla>`;
+
+const NESTED_1 = `<A><B /></A>`;
+
+const NESTED_2 = `[<A><B /><C /></A>]`;
+
+const NESTED_3 = `[ <A>  <B /> <A><B /></A> <C />  </A> ]`;
+
 const BASIC = `
     <Hi there={42}> plain
       text <
@@ -29,6 +39,54 @@ const BRACES_IN_SOURCE_IN_CONTENT = `
   </Markdown>
 `;
 
+const INLINE_CODE = `<InlineMdCode> \`function eat (lunch) { }\` </InlineMdCode>`;
+
+const COMPLICATED_2 = `[
+  <MultiChoice
+    id="1562017094809"
+    shuffle
+    question="Which of the following is an anonymous function?"
+    content={<Markdown>
+      - \`function eat (lunch) { /* etc */ }\`
+      - \`const eat = function (lunch) { /* etc */ };\`
+      - \`const eat = (lunch) => { /* etc */ };\`
+    </Markdown>}
+    options={[
+      "both (2) and (3)",
+      "only (1)",
+      "only (3)",
+      "both (1) and (2)"
+    ]}
+    correctIndex={0}
+    learning_goals={["functions"]}
+  />,
+  <MultiChoice
+    id="1562017094809"
+    shuffle
+    question="Which of the following is an anonymous function?"
+    content={<Markdown>
+      1.  \`\`\`js
+          function eat (lunch) {
+            // etc
+          }
+          \`\`\`
+      2.  \`\`\`js
+          function eat (lunch) {
+            // etc
+          }
+          \`\`\`
+    </Markdown>}
+    options={[
+      "both (2) and (3)",
+      "only (1)",
+      "only (3)",
+      "both (1) and (2)"
+    ]}
+    correctIndex={0}
+    learning_goals={["functions"]}
+  />
+]`;
+
 describe("lexer", () => {
   it("should lex correctly", () => {
     lexer.reset("6");
@@ -41,10 +99,118 @@ describe("lexer", () => {
     expect(lexer.next()).toMatchObject({ type: "<", value: "<" });
     expect(lexer.next()).toMatchObject({ type: "identifier", value: "blabla" });
   });
+
+  // it.only("should WORK!", () => {
+  //   lexer.reset(INLINE_CODE);
+  //   let t,
+  //     i = 0;
+  //   while ((t = lexer.next())) {
+  //     console.log(i++, t, lexer.state, lexer.stack);
+  //   }
+  // });
 });
 
 describe("parser", () => {
-  it("should parse something complicated correctly", () => {
+  it("should not fail if the rawtext child is a json value #1", () => {
+    expect(parseValue(W_NUMBER)).toEqual({
+      _JSXElement: true,
+      name: "Bla",
+      attributes: {},
+      children: [" 42 "]
+    });
+  });
+
+  it("should not fail if the rawtext child is a json value #2", () => {
+    expect(parseValue(W_ARRAY)).toEqual({
+      _JSXElement: true,
+      name: "Bla",
+      attributes: {},
+      children: [" [42] "]
+    });
+  });
+
+  it("should parse nested tags correctly #1", () => {
+    expect(parseValue(NESTED_1)).toEqual({
+      _JSXElement: true,
+      name: "A",
+      attributes: {},
+      children: [
+        {
+          _JSXElement: true,
+          name: "B",
+          attributes: {},
+          children: []
+        }
+      ]
+    });
+  });
+
+  it("should parse nested tags correctly #2", () => {
+    expect(parseValue(NESTED_2)).toEqual([
+      {
+        _JSXElement: true,
+        name: "A",
+        attributes: {},
+        children: [
+          {
+            _JSXElement: true,
+            name: "B",
+            attributes: {},
+            children: []
+          },
+          {
+            _JSXElement: true,
+            name: "C",
+            attributes: {},
+            children: []
+          }
+        ]
+      }
+    ]);
+  });
+
+  it("should parse nested tags correctly #3", () => {
+    expect(parseValue(NESTED_3)).toEqual([
+      {
+        _JSXElement: true,
+        name: "A",
+        attributes: {},
+        children: [
+          "  ",
+          {
+            _JSXElement: true,
+            name: "B",
+            attributes: {},
+            children: []
+          },
+          " ",
+          {
+            _JSXElement: true,
+            name: "A",
+            attributes: {},
+            children: [
+              {
+                _JSXElement: true,
+                name: "B",
+                attributes: {},
+                children: []
+              }
+            ]
+          },
+          " ",
+          {
+            _JSXElement: true,
+            name: "C",
+            attributes: {},
+            children: []
+          },
+          "  "
+        ]
+      }
+    ]);
+  });
+
+  it("should parse something complicated correctly #1", () => {
     expect(parseValue(COMPLICATED)).toEqual({
       _JSXElement: true,
       name: "Button.NavLike",
@@ -83,6 +249,63 @@ describe("parser", () => {
         "\n        "
       ]
     });
+  });
+
+  it("should parse something complicated correctly #2", () => {
+    expect(parseValue(COMPLICATED_2)).toEqual([
+      {
+        _JSXElement: true,
+        name: "MultiChoice",
+        attributes: {
+          id: "1562017094809",
+          shuffle: true,
+          question: "Which of the following is an anonymous function?",
+          content: {
+            _JSXElement: true,
+            name: "Markdown",
+            attributes: {},
+            children: [
+              "\n      - `function eat (lunch) { /* etc */ }`\n      - `const eat = function (lunch) { /* etc */ };`\n      - `const eat = (lunch) => { /* etc */ };`\n    "
+            ]
+          },
+          options: [
+            "both (2) and (3)",
+            "only (1)",
+            "only (3)",
+            "both (1) and (2)"
+          ],
+          correctIndex: 0,
+          learning_goals: ["functions"]
+        },
+        children: []
+      },
+      {
+        _JSXElement: true,
+        name: "MultiChoice",
+        attributes: {
+          id: "1562017094809",
+          shuffle: true,
+          question: "Which of the following is an anonymous function?",
+          content: {
+            _JSXElement: true,
+            name: "Markdown",
+            attributes: {},
+            children: [
+              "\n      1.  ```js\n          function eat (lunch) {\n            // etc\n          }\n          ```\n      2.  ```js\n          function eat (lunch) {\n            // etc\n          }\n          ```\n    "
+            ]
+          },
+          options: [
+            "both (2) and (3)",
+            "only (1)",
+            "only (3)",
+            "both (1) and (2)"
+          ],
+          correctIndex: 0,
+          learning_goals: ["functions"]
+        },
+        children: []
+      }
+    ]);
   });
 
   it("should parse braces in plaintext content", () => {

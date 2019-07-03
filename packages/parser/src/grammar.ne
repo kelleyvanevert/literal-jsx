@@ -66,9 +66,9 @@ elementName ->
   | memberName {% id %}
   | idName {% id %}
 
-closingTag -> "<" _ "/" _ elementName _ ">" {%
-    function ([open,,,,name,,close]) {
-      const start = pos(open);
+closingTag -> %startclose _ elementName _ ">" {%
+    function ([startclose,,name,,close]) {
+      const start = pos(startclose);
       const end = pos(close, true);
       return {
         closingTagName: name.name,
@@ -78,12 +78,12 @@ closingTag -> "<" _ "/" _ elementName _ ">" {%
   %}
 
 furtherElement ->
-    "/" _ ">" {%
-      function ([,,close]) {
+    %selfclose {%
+      function ([selfclose]) {
         return {
           further: {
             loc: {
-              end: pos(close, true)
+              end: pos(selfclose, true)
             },
             children: []
           }
@@ -110,6 +110,7 @@ furtherElement ->
 child ->
     %plaintext {% plaintext_literal %}
   | %codeblock_backticks {% plaintext_literal %}
+  | %inlinecode_backtick {% plaintext_literal %}
   | element {% id %}
   | expression {% id %}
 
