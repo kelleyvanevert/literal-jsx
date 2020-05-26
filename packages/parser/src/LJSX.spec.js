@@ -87,6 +87,26 @@ const COMPLICATED_2 = `[
   />
 ]`;
 
+const NESTED = `<FlashCards
+  id="bla_bla"
+  direction="both"
+  shuffle
+  cards={[
+    {
+      "a": "Arguments",
+      "b": "tell the program extra information about what it needs to do"
+    },
+    {
+      "a": "echo command",
+      "b": "prints all the arguments that you give to it"
+    },
+    {
+      "a": "exit command",
+      "b": "shuts the terminal down"
+    }
+  ]}
+/>`;
+
 describe("lexer", () => {
   it("should lex correctly", () => {
     lexer.reset("6");
@@ -116,7 +136,7 @@ describe("parser", () => {
       _JSXElement: true,
       name: "Bla",
       attributes: {},
-      children: [" 42 "]
+      children: [" 42 "],
     });
   });
 
@@ -125,7 +145,7 @@ describe("parser", () => {
       _JSXElement: true,
       name: "Bla",
       attributes: {},
-      children: [" [42] "]
+      children: [" [42] "],
     });
   });
 
@@ -139,9 +159,9 @@ describe("parser", () => {
           _JSXElement: true,
           name: "B",
           attributes: {},
-          children: []
-        }
-      ]
+          children: [],
+        },
+      ],
     });
   });
 
@@ -156,16 +176,16 @@ describe("parser", () => {
             _JSXElement: true,
             name: "B",
             attributes: {},
-            children: []
+            children: [],
           },
           {
             _JSXElement: true,
             name: "C",
             attributes: {},
-            children: []
-          }
-        ]
-      }
+            children: [],
+          },
+        ],
+      },
     ]);
   });
 
@@ -181,7 +201,7 @@ describe("parser", () => {
             _JSXElement: true,
             name: "B",
             attributes: {},
-            children: []
+            children: [],
           },
           " ",
           {
@@ -193,20 +213,20 @@ describe("parser", () => {
                 _JSXElement: true,
                 name: "B",
                 attributes: {},
-                children: []
-              }
-            ]
+                children: [],
+              },
+            ],
           },
           " ",
           {
             _JSXElement: true,
             name: "C",
             attributes: {},
-            children: []
+            children: [],
           },
-          "  "
-        ]
-      }
+          "  ",
+        ],
+      },
     ]);
   });
 
@@ -219,12 +239,12 @@ describe("parser", () => {
         someData: {
           a: [
             24,
-            { _JSXElement: true, name: "a", attributes: {}, children: [] }
-          ]
+            { _JSXElement: true, name: "a", attributes: {}, children: [] },
+          ],
         },
         false: false,
         implicitlyTrue: true,
-        explicitlyNull: null
+        explicitlyNull: null,
       },
       children: [
         "\n          Plain text is always a bit ",
@@ -232,7 +252,7 @@ describe("parser", () => {
           _JSXElement: true,
           name: "svg:yep",
           attributes: {},
-          children: ["boring"]
+          children: ["boring"],
         },
         "\n          ",
         [
@@ -243,11 +263,11 @@ describe("parser", () => {
             _JSXElement: true,
             name: "a.b.c",
             attributes: {},
-            children: [" hi! "]
-          }
+            children: [" hi! "],
+          },
         ],
-        "\n        "
-      ]
+        "\n        ",
+      ],
     });
   });
 
@@ -265,19 +285,19 @@ describe("parser", () => {
             name: "Markdown",
             attributes: {},
             children: [
-              "\n      - `function eat (lunch) { /* etc */ }`\n      - `const eat = function (lunch) { /* etc */ };`\n      - `const eat = (lunch) => { /* etc */ };`\n    "
-            ]
+              "\n      - `function eat (lunch) { /* etc */ }`\n      - `const eat = function (lunch) { /* etc */ };`\n      - `const eat = (lunch) => { /* etc */ };`\n    ",
+            ],
           },
           options: [
             "both (2) and (3)",
             "only (1)",
             "only (3)",
-            "both (1) and (2)"
+            "both (1) and (2)",
           ],
           correctIndex: 0,
-          learning_goals: ["functions"]
+          learning_goals: ["functions"],
         },
-        children: []
+        children: [],
       },
       {
         _JSXElement: true,
@@ -291,21 +311,48 @@ describe("parser", () => {
             name: "Markdown",
             attributes: {},
             children: [
-              "\n      1.  ```js\n          function eat (lunch) {\n            // etc\n          }\n          ```\n      2.  ```js\n          function eat (lunch) {\n            // etc\n          }\n          ```\n    "
-            ]
+              "\n      1.  ```js\n          function eat (lunch) {\n            // etc\n          }\n          ```\n      2.  ```js\n          function eat (lunch) {\n            // etc\n          }\n          ```\n    ",
+            ],
           },
           options: [
             "both (2) and (3)",
             "only (1)",
             "only (3)",
-            "both (1) and (2)"
+            "both (1) and (2)",
           ],
           correctIndex: 0,
-          learning_goals: ["functions"]
+          learning_goals: ["functions"],
         },
-        children: []
-      }
+        children: [],
+      },
     ]);
+  });
+
+  it("should parse nested objects/arrays correctly", () => {
+    expect(parseValue(NESTED)).toEqual({
+      _JSXElement: true,
+      name: "FlashCards",
+      attributes: {
+        id: "bla_bla",
+        direction: "both",
+        shuffle: true,
+        cards: [
+          {
+            a: "Arguments",
+            b: "tell the program extra information about what it needs to do",
+          },
+          {
+            a: "echo command",
+            b: "prints all the arguments that you give to it",
+          },
+          {
+            a: "exit command",
+            b: "shuts the terminal down",
+          },
+        ],
+      },
+      children: [],
+    });
   });
 
   it("should parse braces in plaintext content", () => {
@@ -317,36 +364,36 @@ describe("parser", () => {
       type: "Element",
       loc: {
         start: { line: 2, column: 5, offset: 5 },
-        end: { line: 4, column: 9, offset: 48 }
+        end: { line: 4, column: 9, offset: 48 },
       },
       name: {
         type: "Name",
         loc: {
           start: { line: 2, column: 6, offset: 6 },
-          end: { line: 2, column: 8, offset: 8 }
+          end: { line: 2, column: 8, offset: 8 },
         },
-        name: "Hi"
+        name: "Hi",
       },
       attributes: [
         {
           type: "Attribute",
           loc: {
             start: { line: 2, column: 9, offset: 9 },
-            end: { line: 2, column: 19, offset: 19 }
+            end: { line: 2, column: 19, offset: 19 },
           },
           name: {
             type: "Name",
             loc: {
               start: { line: 2, column: 9, offset: 9 },
-              end: { line: 2, column: 14, offset: 14 }
+              end: { line: 2, column: 14, offset: 14 },
             },
-            name: "there"
+            name: "there",
           },
           value: {
             type: "Expression",
             loc: {
               start: { line: 2, column: 15, offset: 15 },
-              end: { line: 2, column: 19, offset: 19 }
+              end: { line: 2, column: 19, offset: 19 },
             },
             expression: {
               type: "Literal",
@@ -354,11 +401,11 @@ describe("parser", () => {
               raw: "42",
               loc: {
                 start: { line: 2, column: 16, offset: 16 },
-                end: { line: 2, column: 18, offset: 18 }
-              }
-            }
-          }
-        }
+                end: { line: 2, column: 18, offset: 18 },
+              },
+            },
+          },
+        },
       ],
       children: [
         {
@@ -367,10 +414,10 @@ describe("parser", () => {
           raw: " plain\n      text ",
           loc: {
             start: { line: 2, column: 20, offset: 20 },
-            end: { line: 3, column: 12, offset: 38 }
-          }
-        }
-      ]
+            end: { line: 3, column: 12, offset: 38 },
+          },
+        },
+      ],
     });
   });
 });
