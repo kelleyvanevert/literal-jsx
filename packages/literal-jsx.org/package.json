@@ -13,7 +13,7 @@
     "literal-jsx": "^0.1.1",
     "lodash.mapvalues": "^4.6.0",
     "moment": "^2.24.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "qs": "^6.7.0",
     "querystringify": "^2.0.0",
     "railroad-diagrams": "https://github.com/tabatkins/railroad-diagrams.git",
