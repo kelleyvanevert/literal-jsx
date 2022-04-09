@@ -12,7 +12,7 @@
     "jspath": "^0.4.0",
     "literal-jsx": "^0.1.1",
     "lodash.mapvalues": "^4.6.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-sass": "^4.12.0",
     "qs": "^6.7.0",
     "querystringify": "^2.0.0",
