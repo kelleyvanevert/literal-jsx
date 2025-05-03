@@ -6,7 +6,7 @@ This is an example implementation of a Literal JSX parser, built with [nearley.j
   <img src="https://user-images.githubusercontent.com/43432/58766059-90999780-857a-11e9-91df-7a42baa79c38.png" height="140" />
 </p>
 
-**Literal JSX** is a lightweight format for interchanging content structures potentially rich in shape and data. It extends JSON by adding an "Element" node type, which is shaped as JSX, but which can only contain literal (JSON) data structures. For more information, see http://literal-jsx.org/.
+**Literal JSX** is a lightweight format for interchanging content structures potentially rich in shape and data. It extends JSON by adding an "Element" node type, which is shaped as JSX, but which can only contain literal (JSON) data structures. For more information, see http://literal-jsx.klve.org/.
 
 ## Usage
 
@@ -26,7 +26,7 @@ import {
   grammar,
 
   // for if you want to stream feed the nearley.js parser
-  Parser
+  Parser,
 } from "literal-jsx";
 ```
 
@@ -54,7 +54,7 @@ If you pass it a factory function (such as a simple wrapper around `React.create
 ```js
 const components = {
   Button,
-  NavBar
+  NavBar,
 };
 
 const h = (name, attrs, ...children) =>

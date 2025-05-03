@@ -1,8 +1,8 @@
 {
-  "name": "literal-jsx.org",
+  "name": "literal-jsx.klve.org",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://literal-jsx.org/",
+  "homepage": "https://literal-jsx.klve.org/",
   "dependencies": {
     "@hot-loader/react-dom": "^16.8.6",
     "@literal-jsx/parser": "^0.1.5",

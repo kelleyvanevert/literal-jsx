@@ -1,5 +1,5 @@
 # JSON [https://json.org/]
-# Literal JSX [https://literal-jsx.org/]
+# Literal JSX [https://literal-jsx.klve.org/]
 
 # Tested with nearleyc v2.16.0
 
