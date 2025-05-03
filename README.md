@@ -12,4 +12,4 @@ It extends [JSON](https://json.org/) by adding the JSX-like _Element_ type as a 
  only JSON data (through possibly nesting more _Element_ nodes recursively) are allowed inside of its attributes
  ("props") and children.
 
-For more info, head over to [https://literal-jsx.org/](https://literal-jsx.org/).
+For more info, head over to [https://literal-jsx.klve.org/](https://literal-jsx.klve.org/).
