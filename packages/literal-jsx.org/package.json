@@ -8,7 +8,7 @@
     "@literal-jsx/parser": "^0.1.5",
     "arcsecond": "^1.3.0",
     "classnames": "^2.2.6",
-    "codemirror": "^5.47.0",
+    "codemirror": "^5.58.2",
     "jspath": "^0.4.0",
     "literal-jsx": "^0.1.1",
     "lodash.mapvalues": "^4.6.0",
